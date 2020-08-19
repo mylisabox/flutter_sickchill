@@ -33,11 +33,15 @@ class AddShowDialog extends StatelessWidget {
 }
 
 class AddShowScreen extends StatelessWidget {
+  final String title;
+
+  const AddShowScreen({Key key, this.title = 'Add new show'}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add new show'),
+        title: Text(title),
       ),
       body: AddShowContent(),
     );

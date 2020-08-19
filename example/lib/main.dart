@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SickChillScope(
       baseUrl: 'http://192.168.1.35:8081',
-      apiKey: '6678ab0183ce51868e84c4b1738939cc',
+      apiKey: 'ApiKey',
       enableLogs: true,
       child: MaterialApp(
         title: 'Flutter Demo',
