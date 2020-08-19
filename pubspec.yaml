@@ -8,10 +8,21 @@ environment:
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
+  sickchill: ">=0.0.1 <1.0.0"
+  #path: '../sickchill'
+  provider: ">=4.3.2 <5.0.0"
+  intl: ">=0.16.1 <1.0.0"
+  proxy_layout: ">=2.1.0 <3.0.0"
+  palette_generator: ">=0.2.3 <1.0.0"
+  mobx: ">=1.2.1 <2.0.0"
+  flutter_mobx: ">=1.1.0 <2.0.0"
+  flutter_hooks: ">=0.13.1 <1.0.0"
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  mobx_codegen: ">=1.1.0 <2.0.0"
+  build_runner: ">=1.10.1 <2.0.0"
   flutter_test:
     sdk: flutter
 
