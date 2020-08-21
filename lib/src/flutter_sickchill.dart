@@ -13,9 +13,7 @@ import 'package:proxy_layout/proxy_layout.dart';
 import 'package:sickchill/sickchill.dart';
 
 part 'add_show.dart';
-
 part 'show_details.dart';
-
 part 'shows_list.dart';
 
 final _defaultDateFormat = DateFormat('dd/MM/yyyy');
@@ -49,32 +47,37 @@ class SickChillScope extends StatelessWidget {
 class SickChillScreen extends StatelessWidget {
   final String title;
   final bool splitAnimes;
+  final bool headless;
 
   const SickChillScreen({
     Key key,
     this.title = 'SickChill',
     this.splitAnimes = true,
+    this.headless = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<ShowsStore>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          Observer(
-            builder: (context) => IconButton(
-              onPressed: () {
-                store.viewAsList = !store.viewAsList;
-              },
-              tooltip: store.viewAsList ? 'View as grid' : 'View as list',
-              icon: Icon(store.viewAsList ? Icons.view_module : Icons.view_list),
-            ),
-          ),
+      appBar: headless
+          ? null
+          : AppBar(
+              title: Text(title),
+              actions: [
+                Observer(
+                  builder: (context) => IconButton(
+                    onPressed: () {
+                      store.viewAsList = !store.viewAsList;
+                    },
+                    tooltip: store.viewAsList ? 'View as grid' : 'View as list',
+                    icon: Icon(store.viewAsList ? Icons.view_module : Icons.view_list),
+                  ),
+                ),
         ],
       ),
       body: TvShowList(
+        headless: headless,
         splitAnimes: splitAnimes,
       ),
       floatingActionButton: AddShowFloatingButton(),

@@ -4,8 +4,9 @@ enum _ShowActions { update, rescan, delete }
 
 class TvShowScreen extends HookWidget {
   final TvShow tvShow;
+  final bool headless;
 
-  const TvShowScreen({Key key, this.tvShow}) : super(key: key);
+  const TvShowScreen({Key key, @required this.tvShow, this.headless = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,7 @@ class TvShowScreen extends HookWidget {
                     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverAppBar(
+                          automaticallyImplyLeading: !headless,
                           title: Text(
                             tvShow.name,
                             style: TextStyle(
@@ -94,7 +96,7 @@ class TvShowScreen extends HookWidget {
                                     if (await _showConfirm(context, 'Delete show?', 'Are you sure you want to delete this show?')) {
                                       store
                                           .deleteShow(
-                                              await _showConfirm(context, 'Also delete show data?', 'Are you sure you want to also delete files of this show?'))
+                                          await _showConfirm(context, 'Also delete show data?', 'Are you sure you want to also delete files of this show?'))
                                           .then((_) => Navigator.of(context).pop(true))
                                           .catchError((err) {
                                         _showErrors(context, description: (err as SickChillException).message);
@@ -118,19 +120,19 @@ class TvShowScreen extends HookWidget {
                             bottom: details == null
                                 ? null
                                 : TabBar(
-                                    isScrollable: true,
-                                    indicatorColor: color,
-                                    labelColor: brightness == Brightness.dark ? Colors.white : Colors.black,
-                                    tabs: [
-                                      Tab(
-                                        text: 'Info',
-                                      ),
-                                      for (var i = 0; i < details.seasonList.length; i++)
-                                        Tab(
-                                          text: 'Season ${details.seasonList[i]}',
-                                        ),
-                                    ],
+                              isScrollable: true,
+                              indicatorColor: color,
+                              labelColor: brightness == Brightness.dark ? Colors.white : Colors.black,
+                              tabs: [
+                                Tab(
+                                  text: 'Info',
+                                ),
+                                for (var i = 0; i < details.seasonList.length; i++)
+                                  Tab(
+                                    text: 'Season ${details.seasonList[i]}',
                                   ),
+                              ],
+                            ),
                           ),
                         ),
                       ];

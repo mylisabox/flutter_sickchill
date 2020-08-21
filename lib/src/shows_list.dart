@@ -2,8 +2,9 @@ part of 'flutter_sickchill.dart';
 
 class TvShowList extends HookWidget {
   final bool splitAnimes;
+  final bool headless;
 
-  TvShowList({Key key, this.splitAnimes = true}) : super(key: key);
+  TvShowList({Key key, this.splitAnimes = true, this.headless = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +83,7 @@ class TvShowList extends HookWidget {
                           final tvShow = shows[index];
                           return TvShowListItem(
                             tvShow: tvShow,
+                            headless: headless,
                             onRefresh: () {
                               refreshKey.currentState.show();
                             },
@@ -99,6 +101,7 @@ class TvShowList extends HookWidget {
                         final tvShow = shows[index];
                         return TvShowGridItem(
                           tvShow: tvShow,
+                          headless: headless,
                           onRefresh: () {
                             refreshKey.currentState.show();
                           },
@@ -124,8 +127,9 @@ class TvShowListItem extends StatelessWidget {
   final DateFormat dateFormat;
   final VoidCallback onTap;
   final VoidCallback onRefresh;
+  final bool headless;
 
-  const TvShowListItem({Key key, this.tvShow, this.dateFormat, this.onTap, this.onRefresh}) : super(key: key);
+  const TvShowListItem({Key key, this.headless = false, this.tvShow, this.dateFormat, this.onTap, this.onRefresh}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -133,9 +137,11 @@ class TvShowListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap ??
           () async {
-            final needRefresh = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                  return TvShowScreen(tvShow: tvShow);
-                })) ??
+            final needRefresh = await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return TvShowScreen(tvShow: tvShow, headless: headless);
+                    },
+                    settings: RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
                 false;
             if (needRefresh) {
               onRefresh();
@@ -197,13 +203,17 @@ class TvShowGridItem extends StatelessWidget {
   final Color backgroundColor;
   final VoidCallback onTap;
   final VoidCallback onRefresh;
+  final bool headless;
 
-  const TvShowGridItem({Key key, this.tvShow, this.dateFormat, this.backgroundColor, this.onTap, this.onRefresh}) : super(key: key);
+  const TvShowGridItem({Key key, this.headless = false, this.tvShow, this.dateFormat, this.backgroundColor, this.onTap, this.onRefresh}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final format = dateFormat ?? _defaultDateFormat;
-    final color = backgroundColor ?? Colors.grey[300];
+    final brightness = Theme
+        .of(context)
+        .brightness;
+    final color = backgroundColor ?? brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[300];
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Material(
@@ -217,8 +227,8 @@ class TvShowGridItem extends StatelessWidget {
           onTap: onTap ??
               () async {
                 final needRefresh = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                      return TvShowScreen(tvShow: tvShow);
-                    })) ??
+                  return TvShowScreen(tvShow: tvShow, headless: headless);
+                }, settings: RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
                     false;
                 if (needRefresh) {
                   onRefresh();
