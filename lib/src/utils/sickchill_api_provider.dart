@@ -7,8 +7,8 @@ class SickChillApiProvider {
 
   SickChillApiProvider._(this.api);
 
-  factory SickChillApiProvider.setup({@required String baseUrl, @required String apiKey, bool enableLogs = false}) {
-    return _instance ??= SickChillApiProvider._(SickChill(apiKey: apiKey, baseUrl: baseUrl, enableLogs: enableLogs));
+  factory SickChillApiProvider.setup({@required String baseUrl, String proxyUrl, @required String apiKey, bool enableLogs = false}) {
+    return _instance ??= SickChillApiProvider._(SickChill(apiKey: apiKey, proxyUrl: proxyUrl, baseUrl: baseUrl, enableLogs: enableLogs));
   }
 
   factory SickChillApiProvider() {

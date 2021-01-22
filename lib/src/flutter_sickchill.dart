@@ -21,6 +21,7 @@ final _defaultDateFormat = DateFormat('dd/MM/yyyy');
 class SickChillScope extends StatelessWidget {
   final String baseUrl;
   final String apiKey;
+  final String proxyUrl;
   final Widget child;
   final bool enableLogs;
 
@@ -29,6 +30,7 @@ class SickChillScope extends StatelessWidget {
     @required this.baseUrl,
     @required this.child,
     @required this.apiKey,
+    this.proxyUrl,
     this.enableLogs = false,
   }) : super(key: key);
 
@@ -36,7 +38,7 @@ class SickChillScope extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<ShowsStore>(
       create: (_) {
-        return ShowsStore(SickChillApiProvider.setup(baseUrl: baseUrl, enableLogs: enableLogs, apiKey: apiKey));
+        return ShowsStore(SickChillApiProvider.setup(baseUrl: baseUrl, proxyUrl: proxyUrl, enableLogs: enableLogs, apiKey: apiKey));
       },
       dispose: (_, store) => store.dispose(),
       child: child,

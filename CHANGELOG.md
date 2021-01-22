@@ -1,3 +1,7 @@
+## [0.0.3] - 22/01/2021
+
+* update sickchill to add proxy url
+
 ## [0.0.2] - UI fixes
 
 * Add headless option

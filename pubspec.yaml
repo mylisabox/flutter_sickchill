@@ -1,6 +1,6 @@
 name: flutter_sickchill
 description: Flutter package to manage remote sickchill instance
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/mylisabox/flutter_sickchill
 
 environment:
@@ -8,8 +8,8 @@ environment:
   flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
-  sickchill: ">=0.0.1 <1.0.0"
-  #path: '../sickchill'
+  sickchill: ">=0.0.3 <1.0.0"
+    #path: '../sickchill'
   provider: ">=4.3.2 <5.0.0"
   intl: ">=0.16.1 <1.0.0"
   proxy_layout: ">=2.1.0 <3.0.0"
