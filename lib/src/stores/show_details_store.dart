@@ -13,7 +13,7 @@ class ShowDetailsStore = _ShowDetailsStore with _$ShowDetailsStore;
 abstract class _ShowDetailsStore with Store {
   final SickChillApiProvider _sickchill;
 
-  _ShowDetailsStore({SickChillApiProvider sickchill}) : _sickchill = SickChillApiProvider();
+  _ShowDetailsStore({SickChillApiProvider? sickchill}) : _sickchill = sickchill ?? SickChillApiProvider();
 
   @observable
   ObservableList<String> episodeInSearch = ObservableList.of([]);
@@ -22,10 +22,10 @@ abstract class _ShowDetailsStore with Store {
   ObservableList<String> episodeSubtitleInSearch = ObservableList.of([]);
 
   @observable
-  PaletteGenerator palette;
+  PaletteGenerator? palette;
 
   @computed
-  Color get primaryColor {
+  Color? get primaryColor {
     final candidate = [
       palette?.vibrantColor,
       palette?.lightVibrantColor,
@@ -38,7 +38,7 @@ abstract class _ShowDetailsStore with Store {
   }
 
   @observable
-  TvShowDetails tvShowDetails;
+  TvShowDetails? tvShowDetails;
 
   @observable
   ObservableMap<int, TvShowSeason> currentSeasons = ObservableMap.of({});
@@ -62,7 +62,7 @@ abstract class _ShowDetailsStore with Store {
   @action
   Future<void> loadSeason(int number, {bool force = false}) async {
     if (currentSeasons[number] == null) {
-      final results = await _sickchill.api.getSeasons(tvShowDetails.id, seasonNumber: number);
+      final results = await _sickchill.api.getSeasons(tvShowDetails!.id, seasonNumber: number);
       currentSeasons[number] = results.first;
     }
   }
@@ -73,7 +73,7 @@ abstract class _ShowDetailsStore with Store {
       episodeInSearch.add(number);
       await _sickchill.api
           .searchEpisode(
-            tvShowDetails.id,
+            tvShowDetails!.id,
             seasonNumber,
             number,
           )
@@ -89,7 +89,7 @@ abstract class _ShowDetailsStore with Store {
       episodeSubtitleInSearch.add(number);
       await _sickchill.api
           .searchEpisodeSubtitle(
-            tvShowDetails.id,
+            tvShowDetails!.id,
             seasonNumber,
             number,
           )
@@ -101,24 +101,24 @@ abstract class _ShowDetailsStore with Store {
 
   @action
   Future<void> pauseOrResumeShow() async {
-    await _sickchill.api.pauseShow(tvShowDetails.id, !tvShowDetails.isPaused);
-    await _loadTvShow(tvShowDetails.id);
+    await _sickchill.api.pauseShow(tvShowDetails!.id, !tvShowDetails!.isPaused);
+    await _loadTvShow(tvShowDetails!.id);
   }
 
   @action
   Future<void> updateShow() async {
-    await _sickchill.api.forceFullUpdateShow(tvShowDetails.id);
-    await _loadTvShow(tvShowDetails.id);
+    await _sickchill.api.forceFullUpdateShow(tvShowDetails!.id);
+    await _loadTvShow(tvShowDetails!.id);
   }
 
   @action
   Future<void> rescanShow() async {
-    await _sickchill.api.refreshShowFromDisk(tvShowDetails.id);
-    await _loadTvShow(tvShowDetails.id);
+    await _sickchill.api.refreshShowFromDisk(tvShowDetails!.id);
+    await _loadTvShow(tvShowDetails!.id);
   }
 
   @action
   Future<void> deleteShow(bool withData) async {
-    await _sickchill.api.removeShow(tvShowDetails.id, removeFiles: withData ?? false);
+    await _sickchill.api.removeShow(tvShowDetails!.id, removeFiles: withData);
   }
 }

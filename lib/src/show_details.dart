@@ -6,7 +6,8 @@ class TvShowScreen extends HookWidget {
   final TvShow tvShow;
   final bool headless;
 
-  const TvShowScreen({Key key, @required this.tvShow, this.headless = false}) : super(key: key);
+  const TvShowScreen({Key? key, required this.tvShow, this.headless = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +34,36 @@ class TvShowScreen extends HookWidget {
                 children: [
                   if (tvShow.hasFanart)
                     Image.network(
-                      tvShow.fanart,
+                      tvShow.fanart!,
                       fit: BoxFit.cover,
                     ),
-                  if (tvShow.hasFanart) ColoredBox(color: Colors.black.withOpacity(0.6)),
+                  if (tvShow.hasFanart)
+                    ColoredBox(color: Colors.black.withOpacity(0.6)),
                   NestedScrollView(
-                    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
                       return <Widget>[
                         SliverAppBar(
                           automaticallyImplyLeading: !headless,
                           title: Text(
                             tvShow.name,
                             style: TextStyle(
-                              color: brightness == Brightness.dark ? Colors.white : Colors.black,
+                              color: brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                           ),
                           iconTheme: IconThemeData(
-                            color: brightness == Brightness.dark ? Colors.white : Colors.black,
+                            color: brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                           actions: [
                             if (!tvShow.isEnded && details != null)
                               IconButton(
-                                icon: Icon(details.isPaused ? Icons.play_arrow : Icons.pause),
+                                icon: Icon(details.isPaused
+                                    ? Icons.play_arrow
+                                    : Icons.pause),
                                 onPressed: () {
                                   store.pauseOrResumeShow();
                                 },
@@ -80,27 +89,51 @@ class TvShowScreen extends HookWidget {
                                 switch (selected) {
                                   case _ShowActions.update:
                                     store.updateShow().catchError((err) {
-                                      _showErrors(context, description: (err as SickChillException).message);
-                                    }, test: (err) => err is SickChillException).catchError((err) {
+                                      _showErrors(context,
+                                          description:
+                                              (err as SickChillException)
+                                                  .message);
+                                    },
+                                        test: (err) => err
+                                            is SickChillException).catchError(
+                                        (err) {
                                       _showErrors(context);
                                     });
                                     break;
                                   case _ShowActions.rescan:
                                     store.rescanShow().catchError((err) {
-                                      _showErrors(context, description: (err as SickChillException).message);
-                                    }, test: (err) => err is SickChillException).catchError((err) {
+                                      _showErrors(context,
+                                          description:
+                                              (err as SickChillException)
+                                                  .message);
+                                    },
+                                        test: (err) => err
+                                            is SickChillException).catchError(
+                                        (err) {
                                       _showErrors(context);
                                     });
                                     break;
                                   case _ShowActions.delete:
-                                    if (await _showConfirm(context, 'Delete show?', 'Are you sure you want to delete this show?')) {
+                                    if (await _showConfirm(
+                                        context,
+                                        'Delete show?',
+                                        'Are you sure you want to delete this show?')) {
                                       store
-                                          .deleteShow(
-                                          await _showConfirm(context, 'Also delete show data?', 'Are you sure you want to also delete files of this show?'))
-                                          .then((_) => Navigator.of(context).pop(true))
+                                          .deleteShow(await _showConfirm(
+                                              context,
+                                              'Also delete show data?',
+                                              'Are you sure you want to also delete files of this show?'))
+                                          .then((_) =>
+                                              Navigator.of(context).pop(true))
                                           .catchError((err) {
-                                        _showErrors(context, description: (err as SickChillException).message);
-                                      }, test: (err) => err is SickChillException).catchError((err) {
+                                        _showErrors(context,
+                                            description:
+                                                (err as SickChillException)
+                                                    .message);
+                                      },
+                                              test: (err) => err
+                                                  is SickChillException).catchError(
+                                              (err) {
                                         _showErrors(context);
                                       });
                                     }
@@ -120,19 +153,24 @@ class TvShowScreen extends HookWidget {
                             bottom: details == null
                                 ? null
                                 : TabBar(
-                              isScrollable: true,
-                              indicatorColor: color,
-                              labelColor: brightness == Brightness.dark ? Colors.white : Colors.black,
-                              tabs: [
-                                Tab(
-                                  text: 'Info',
-                                ),
-                                for (var i = 0; i < details.seasonList.length; i++)
-                                  Tab(
-                                    text: 'Season ${details.seasonList[i]}',
+                                    isScrollable: true,
+                                    indicatorColor: color,
+                                    labelColor: brightness == Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                    tabs: [
+                                      Tab(
+                                        text: 'Info',
+                                      ),
+                                      for (var i = 0;
+                                          i < details.seasonList!.length;
+                                          i++)
+                                        Tab(
+                                          text:
+                                              'Season ${details.seasonList![i]}',
+                                        ),
+                                    ],
                                   ),
-                              ],
-                            ),
                           ),
                         ),
                       ];
@@ -144,10 +182,12 @@ class TvShowScreen extends HookWidget {
                               TvShowStats(
                                 tvShowDetails: details,
                               ),
-                              for (var i = 0; i < details.seasonList.length; i++)
+                              for (var i = 0;
+                                  i < details.seasonList!.length;
+                                  i++)
                                 TvShowSeason(
                                   tvShowDetails: details,
-                                  seasonNumber: details.seasonList[i],
+                                  seasonNumber: details.seasonList![i],
                                 ),
                             ],
                           ),
@@ -163,39 +203,40 @@ class TvShowScreen extends HookWidget {
 }
 
 class _TvShowBanner extends StatelessWidget implements PreferredSizeWidget {
-  final String banner;
-  final PreferredSizeWidget bottom;
+  final String? banner;
+  final PreferredSizeWidget? bottom;
 
-  const _TvShowBanner({Key key, this.banner, this.bottom}) : super(key: key);
+  const _TvShowBanner({Key? key, this.banner, this.bottom}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (bottom != null) bottom,
-        Image.network(
-          banner,
-          fit: BoxFit.fitWidth,
-          height: kToolbarHeight,
-          width: double.infinity,
-        ),
+        if (bottom != null) bottom!,
+        if (banner != null)
+          Image.network(
+            banner!,
+            fit: BoxFit.fitWidth,
+            height: kToolbarHeight,
+            width: double.infinity,
+          ),
       ],
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight((bottom?.preferredSize?.height ?? 0) + kToolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight((bottom?.preferredSize.height ?? 0) + kToolbarHeight);
 }
 
 class TvShowStats extends StatelessWidget {
   final TvShowDetails tvShowDetails;
 
-  const TvShowStats({Key key, @required this.tvShowDetails}) : super(key: key);
+  const TvShowStats({Key? key, required this.tvShowDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -235,7 +276,9 @@ class TvShowStats extends StatelessWidget {
                           ),
                           _ShowStatLine(
                             name: 'Airs',
-                            value: tvShowDetails.airs + ' on ' + tvShowDetails.network,
+                            value: tvShowDetails.airs! +
+                                ' on ' +
+                                tvShowDetails.network!,
                           ),
                           _ShowStatLine(
                             name: 'Network',
@@ -265,10 +308,11 @@ class TvShowStats extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('More information', style: Theme.of(context).textTheme.headline6),
+                    Text('More information',
+                        style: Theme.of(context).textTheme.headline6),
                     _ShowStatLine(
                       name: 'Language',
-                      value: tvShowDetails.language.toUpperCase(),
+                      value: tvShowDetails.language!.toUpperCase(),
                     ),
                     _ShowStatLine(
                       name: 'Subtitles',
@@ -285,7 +329,9 @@ class TvShowStats extends StatelessWidget {
                     Text('Genre:'),
                     Wrap(
                       spacing: 5,
-                      children: tvShowDetails.genre.map((e) => Chip(label: Text(e))).toList(),
+                      children: tvShowDetails.genre!
+                          .map((e) => Chip(label: Text(e)))
+                          .toList(),
                     ),
                   ],
                 ),
@@ -299,10 +345,10 @@ class TvShowStats extends StatelessWidget {
 }
 
 class _ShowStatLine extends StatelessWidget {
-  final String name;
-  final String value;
+  final String? name;
+  final String? value;
 
-  const _ShowStatLine({Key key, this.name, this.value}) : super(key: key);
+  const _ShowStatLine({Key? key, this.name, this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +357,7 @@ class _ShowStatLine extends StatelessWidget {
       child: Wrap(
         children: [
           Text('$name: '),
-          Text(value),
+          Text(value!),
         ],
       ),
     );
@@ -322,7 +368,9 @@ class TvShowSeason extends HookWidget {
   final TvShowDetails tvShowDetails;
   final int seasonNumber;
 
-  const TvShowSeason({Key key, @required this.tvShowDetails, @required this.seasonNumber}) : super(key: key);
+  const TvShowSeason(
+      {Key? key, required this.tvShowDetails, required this.seasonNumber})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +418,8 @@ class TvShowSeason extends HookWidget {
                       .map(
                         (e) => DataRow(
                           color: MaterialStateProperty.resolveWith((states) {
-                            if (e.isDownloaded || e.status.toLowerCase() == 'archived') {
+                            if (e.isDownloaded ||
+                                e.status.toLowerCase() == 'archived') {
                               return Colors.green.withOpacity(0.4);
                             }
                             if (e.status.toLowerCase() == 'skipped') {
@@ -392,22 +441,28 @@ class TvShowSeason extends HookWidget {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 1,
-                                    valueColor: AlwaysStoppedAnimation(store.primaryColor),
+                                    valueColor: AlwaysStoppedAnimation(
+                                        store.primaryColor),
                                   ),
                                 );
                               }
                               return Icon(Icons.search);
-                            }), onTap: () => store.searchEpisode(seasonNumber, e.number)),
+                            }),
+                                onTap: () => store.searchEpisode(
+                                    seasonNumber, e.number)),
                             DataCell(
                                 e.isDownloaded
                                     ? Observer(builder: (context) {
-                                        if (store.episodeSubtitleInSearch.contains(e.number)) {
+                                        if (store.episodeSubtitleInSearch
+                                            .contains(e.number)) {
                                           return SizedBox(
                                             width: 20,
                                             height: 20,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 1,
-                                              valueColor: AlwaysStoppedAnimation(store.primaryColor),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      store.primaryColor),
                                             ),
                                           );
                                         }
@@ -415,7 +470,8 @@ class TvShowSeason extends HookWidget {
                                       })
                                     : Container(), onTap: () {
                               if (e.isDownloaded) {
-                                store.searchEpisodeSubtitle(seasonNumber, e.number);
+                                store.searchEpisodeSubtitle(
+                                    seasonNumber, e.number);
                               }
                             }),
                             DataCell(
@@ -425,13 +481,18 @@ class TvShowSeason extends HookWidget {
                               Text(e.name),
                             ),
                             DataCell(
-                              Text(e.airdate == null ? '-' : _defaultDateFormat.format(e.airdate)),
+                              Text(e.airdate == null
+                                  ? '-'
+                                  : _defaultDateFormat.format(e.airdate!)),
                             ),
                             DataCell(
-                              Text(e.status + (e.quality.toLowerCase() == 'n/a' ? '' : ' (${e.quality})')),
+                              Text(e.status +
+                                  (e.quality!.toLowerCase() == 'n/a'
+                                      ? ''
+                                      : ' (${e.quality})')),
                             ),
                             DataCell(
-                              Text(e.subtitles),
+                              Text(e.subtitles!),
                             ),
                           ],
                         ),

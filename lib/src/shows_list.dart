@@ -4,7 +4,8 @@ class TvShowList extends HookWidget {
   final bool splitAnimes;
   final bool headless;
 
-  TvShowList({Key key, this.splitAnimes = true, this.headless = false}) : super(key: key);
+  TvShowList({Key? key, this.splitAnimes = true, this.headless = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,8 @@ class TvShowList extends HookWidget {
     final showAnime = useState(false);
 
     useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        refreshKey.currentState.show();
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        refreshKey.currentState?.show();
       });
       return null;
     }, const []);
@@ -38,7 +39,8 @@ class TvShowList extends HookWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: TextFormField(
-                          decoration: InputDecoration(labelText: 'Search by name'),
+                          decoration:
+                              InputDecoration(labelText: 'Search by name'),
                           onChanged: (value) {
                             store.filter(value);
                           },
@@ -76,16 +78,24 @@ class TvShowList extends HookWidget {
                       shows = showAnime.value ? store.animes : store.shows;
                     }
 
+                    if (store.tvShows.error != null) {
+                      return Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text(store.tvShows.error.toString()),
+                      );
+                    }
+
                     if (store.viewAsList) {
                       return ListView.separated(
-                        separatorBuilder: (context, index) => Divider(height: 1),
+                        separatorBuilder: (context, index) =>
+                            Divider(height: 1),
                         itemBuilder: (context, index) {
                           final tvShow = shows[index];
                           return TvShowListItem(
                             tvShow: tvShow,
                             headless: headless,
                             onRefresh: () {
-                              refreshKey.currentState.show();
+                              refreshKey.currentState?.show();
                             },
                             key: ValueKey(tvShow.id),
                           );
@@ -96,14 +106,15 @@ class TvShowList extends HookWidget {
                     }
 
                     return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 350, childAspectRatio: .5),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 350, childAspectRatio: .5),
                       itemBuilder: (context, index) {
                         final tvShow = shows[index];
                         return TvShowGridItem(
                           tvShow: tvShow,
                           headless: headless,
                           onRefresh: () {
-                            refreshKey.currentState.show();
+                            refreshKey.currentState?.show();
                           },
                           key: ValueKey(tvShow.id),
                         );
@@ -124,29 +135,33 @@ class TvShowList extends HookWidget {
 
 class TvShowListItem extends StatelessWidget {
   final TvShow tvShow;
-  final DateFormat dateFormat;
-  final VoidCallback onTap;
+  final DateFormat? dateFormat;
   final VoidCallback onRefresh;
   final bool headless;
 
-  const TvShowListItem({Key key, this.headless = false, this.tvShow, this.dateFormat, this.onTap, this.onRefresh}) : super(key: key);
+  const TvShowListItem({
+    Key? key,
+    this.headless = false,
+    required this.tvShow,
+    required this.onRefresh,
+    this.dateFormat,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final format = dateFormat ?? _defaultDateFormat;
     return InkWell(
-      onTap: onTap ??
-          () async {
-            final needRefresh = await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return TvShowScreen(tvShow: tvShow, headless: headless);
-                    },
-                    settings: RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
-                false;
-            if (needRefresh) {
-              onRefresh();
-            }
-          },
+      onTap: () async {
+        final needRefresh = await Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return TvShowScreen(tvShow: tvShow, headless: headless);
+                },
+                settings: RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
+            false;
+        if (needRefresh) {
+          onRefresh();
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -174,16 +189,20 @@ class TvShowListItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    Text(tvShow.nextEpisode == null ? tvShow.status : format.format(tvShow.nextEpisode)),
+                    Text(tvShow.nextEpisode == null
+                        ? tvShow.status
+                        : format.format(tvShow.nextEpisode!)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          tvShow.quality,
+                          tvShow.quality!,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Spacer(),
-                        if (tvShow.network != null && tvShow.network.isNotEmpty) Image.network(tvShow.networkImage),
+                        if (tvShow.network != null &&
+                            tvShow.network!.isNotEmpty)
+                          Image.network(tvShow.networkImage),
                       ],
                     ),
                   ],
@@ -199,21 +218,26 @@ class TvShowListItem extends StatelessWidget {
 
 class TvShowGridItem extends StatelessWidget {
   final TvShow tvShow;
-  final DateFormat dateFormat;
-  final Color backgroundColor;
-  final VoidCallback onTap;
+  final DateFormat? dateFormat;
+  final Color? backgroundColor;
   final VoidCallback onRefresh;
   final bool headless;
 
-  const TvShowGridItem({Key key, this.headless = false, this.tvShow, this.dateFormat, this.backgroundColor, this.onTap, this.onRefresh}) : super(key: key);
+  const TvShowGridItem({
+    Key? key,
+    this.headless = false,
+    required this.tvShow,
+    this.backgroundColor,
+    this.dateFormat,
+    required this.onRefresh,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final format = dateFormat ?? _defaultDateFormat;
-    final brightness = Theme
-        .of(context)
-        .brightness;
-    final color = backgroundColor ?? brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[300];
+    final brightness = Theme.of(context).brightness;
+    final color = backgroundColor ??
+        (brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[300]);
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Material(
@@ -224,16 +248,20 @@ class TvShowGridItem extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         color: color,
         child: InkWell(
-          onTap: onTap ??
-              () async {
-                final needRefresh = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                  return TvShowScreen(tvShow: tvShow, headless: headless);
-                }, settings: RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
-                    false;
-                if (needRefresh) {
-                  onRefresh();
-                }
-              },
+          onTap: () async {
+            final needRefresh = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return TvShowScreen(
+                              tvShow: tvShow, headless: headless);
+                        },
+                        settings:
+                            RouteSettings(name: '/sickchill/${tvShow.id}'))) ??
+                false;
+            if (needRefresh) {
+              onRefresh();
+            }
+          },
           child: Padding(
             padding: EdgeInsets.all(8),
             child: Column(
@@ -242,11 +270,15 @@ class TvShowGridItem extends StatelessWidget {
                 Image.network(
                   tvShow.posterThumbnail,
                   fit: BoxFit.fitWidth,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Center(
                       child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
                       ),
                     );
                   },
@@ -260,12 +292,16 @@ class TvShowGridItem extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
-                Center(child: Text(tvShow.nextEpisode == null ? tvShow.status : format.format(tvShow.nextEpisode))),
+                Center(
+                    child: Text(tvShow.nextEpisode == null
+                        ? tvShow.status
+                        : format.format(tvShow.nextEpisode!))),
                 Spacer(),
-                if (tvShow.network != null && tvShow.network.isNotEmpty) Center(child: Image.network(tvShow.networkImage)),
+                if (tvShow.network != null && tvShow.network!.isNotEmpty)
+                  Center(child: Image.network(tvShow.networkImage)),
                 Center(
                     child: Text(
-                  tvShow.quality,
+                  tvShow.quality!,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 )),
               ],

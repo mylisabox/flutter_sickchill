@@ -21,15 +21,15 @@ final _defaultDateFormat = DateFormat('dd/MM/yyyy');
 class SickChillScope extends StatelessWidget {
   final String baseUrl;
   final String apiKey;
-  final String proxyUrl;
+  final String? proxyUrl;
   final Widget child;
   final bool enableLogs;
 
   const SickChillScope({
-    Key key,
-    @required this.baseUrl,
-    @required this.child,
-    @required this.apiKey,
+    Key? key,
+    required this.baseUrl,
+    required this.child,
+    required this.apiKey,
     this.proxyUrl,
     this.enableLogs = false,
   }) : super(key: key);
@@ -52,7 +52,7 @@ class SickChillScreen extends StatelessWidget {
   final bool headless;
 
   const SickChillScreen({
-    Key key,
+    Key? key,
     this.title = 'SickChill',
     this.splitAnimes = true,
     this.headless = false,
@@ -94,8 +94,8 @@ Future<bool> _showConfirm(BuildContext context, String title, String description
           title: Text(title),
           content: Text(description),
           actions: <Widget>[
-            FlatButton(onPressed: () => Navigator.of(context).pop(true), child: Text(MaterialLocalizations.of(context).okButtonLabel)),
-            FlatButton(onPressed: () => Navigator.of(context).pop(false), child: Text(MaterialLocalizations.of(context).cancelButtonLabel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(MaterialLocalizations.of(context).okButtonLabel)),
+            TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(MaterialLocalizations.of(context).cancelButtonLabel)),
           ],
         ),
       ) ??
@@ -105,32 +105,32 @@ Future<bool> _showConfirm(BuildContext context, String title, String description
 void _showErrors(
   BuildContext context, {
   String title = 'Ooops',
-  String description = 'Sorry, an error as occurred',
+  String? description = 'Sorry, an error as occurred',
 }) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       title: Text(title),
-      content: Text(description),
+      content: Text(description!),
       actions: <Widget>[
-        FlatButton(onPressed: () => Navigator.of(context).pop(), child: Text(MaterialLocalizations.of(context).okButtonLabel)),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(MaterialLocalizations.of(context).okButtonLabel)),
       ],
     ),
   );
 }
 
-Future<bool> _showLoading(
+Future<bool?> _showLoading(
   BuildContext context, {
   String title = 'Please wait',
-  Future Function() until,
+  Future Function()? until,
 }) {
   return showDialog(
     context: context,
     builder: (context) => HookBuilder(
       builder: (context) {
         useEffect(() {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            until().then((value) => Navigator.of(context).pop(true)).catchError((err) {
+          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            until!().then((value) => Navigator.of(context).pop(true)).catchError((err) {
               Navigator.of(context).pop(false);
               _showErrors(context, description: err.message);
             }, test: (err) => err is SickChillException).catchError((err) {

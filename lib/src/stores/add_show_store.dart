@@ -11,15 +11,15 @@ class AddShowStore = _AddShowStore with _$AddShowStore;
 abstract class _AddShowStore with Store {
   final SickChillApiProvider _sickchill;
 
-  _AddShowStore({SickChillApiProvider sickchill}) : _sickchill = sickchill ?? SickChillApiProvider();
+  _AddShowStore({SickChillApiProvider? sickchill}) : _sickchill = sickchill ?? SickChillApiProvider();
 
-  String lastShowSearch;
-
-  @observable
-  List<TvShowResult> currentSearchResult = [];
+  String? lastShowSearch;
 
   @observable
-  TvShowResult selectedShow;
+  List<TvShowResult>? currentSearchResult = [];
+
+  @observable
+  TvShowResult? selectedShow;
   @observable
   bool isAnime = false;
   @observable

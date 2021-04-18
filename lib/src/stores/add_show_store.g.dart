@@ -9,16 +9,17 @@ part of 'add_show_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$AddShowStore on _AddShowStore, Store {
-  final _$currentSearchResultAtom = Atom(name: '_AddShowStore.currentSearchResult');
+  final _$currentSearchResultAtom =
+      Atom(name: '_AddShowStore.currentSearchResult');
 
   @override
-  List<TvShowResult> get currentSearchResult {
+  List<TvShowResult>? get currentSearchResult {
     _$currentSearchResultAtom.reportRead();
     return super.currentSearchResult;
   }
 
   @override
-  set currentSearchResult(List<TvShowResult> value) {
+  set currentSearchResult(List<TvShowResult>? value) {
     _$currentSearchResultAtom.reportWrite(value, super.currentSearchResult, () {
       super.currentSearchResult = value;
     });
@@ -27,13 +28,13 @@ mixin _$AddShowStore on _AddShowStore, Store {
   final _$selectedShowAtom = Atom(name: '_AddShowStore.selectedShow');
 
   @override
-  TvShowResult get selectedShow {
+  TvShowResult? get selectedShow {
     _$selectedShowAtom.reportRead();
     return super.selectedShow;
   }
 
   @override
-  set selectedShow(TvShowResult value) {
+  set selectedShow(TvShowResult? value) {
     _$selectedShowAtom.reportWrite(value, super.selectedShow, () {
       super.selectedShow = value;
     });

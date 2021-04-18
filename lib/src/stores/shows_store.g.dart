@@ -9,14 +9,19 @@ part of 'shows_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ShowsStore on _ShowsStore, Store {
-  Computed<List<TvShow>> _$showsComputed;
+  Computed<List<TvShow>>? _$showsComputed;
 
   @override
-  List<TvShow> get shows => (_$showsComputed ??= Computed<List<TvShow>>(() => super.shows, name: '_ShowsStore.shows')).value;
-  Computed<List<TvShow>> _$animesComputed;
+  List<TvShow> get shows => (_$showsComputed ??=
+          Computed<List<TvShow>>(() => super.shows, name: '_ShowsStore.shows'))
+      .value;
+  Computed<List<TvShow>>? _$animesComputed;
 
   @override
-  List<TvShow> get animes => (_$animesComputed ??= Computed<List<TvShow>>(() => super.animes, name: '_ShowsStore.animes')).value;
+  List<TvShow> get animes =>
+      (_$animesComputed ??= Computed<List<TvShow>>(() => super.animes,
+              name: '_ShowsStore.animes'))
+          .value;
 
   final _$searchQueryAtom = Atom(name: '_ShowsStore.searchQuery');
 
@@ -75,21 +80,28 @@ mixin _$ShowsStore on _ShowsStore, Store {
   @override
   Future<void> addShow(int indexerId,
       {bool isAnime = false,
-      TvShowEpisodeStatus status,
-      TvShowEpisodeStatus futureStatus,
-      TvShowEpisodeQuality quality,
+      TvShowEpisodeStatus? status,
+      TvShowEpisodeStatus? futureStatus,
+      TvShowEpisodeQuality? quality,
       bool scene = false,
       bool subtitles = true,
       bool folderSeasons = true}) {
     return _$addShowAsyncAction.run(() => super.addShow(indexerId,
-        isAnime: isAnime, status: status, futureStatus: futureStatus, quality: quality, scene: scene, subtitles: subtitles, folderSeasons: folderSeasons));
+        isAnime: isAnime,
+        status: status,
+        futureStatus: futureStatus,
+        quality: quality,
+        scene: scene,
+        subtitles: subtitles,
+        folderSeasons: folderSeasons));
   }
 
   final _$_ShowsStoreActionController = ActionController(name: '_ShowsStore');
 
   @override
   void filter(String query) {
-    final _$actionInfo = _$_ShowsStoreActionController.startAction(name: '_ShowsStore.filter');
+    final _$actionInfo =
+        _$_ShowsStoreActionController.startAction(name: '_ShowsStore.filter');
     try {
       return super.filter(query);
     } finally {

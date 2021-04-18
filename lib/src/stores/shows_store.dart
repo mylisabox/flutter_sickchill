@@ -31,7 +31,7 @@ abstract class _ShowsStore with Store {
           return !element.isAnime;
         }
         return !element.isAnime && element.name.toLowerCase().contains(searchQuery.toLowerCase());
-      })?.toList() ??
+      }).toList() ??
       [];
 
   @computed
@@ -41,19 +41,19 @@ abstract class _ShowsStore with Store {
           return element.isAnime;
         }
         return element.isAnime && element.name.toLowerCase().contains(searchQuery.toLowerCase());
-      })?.toList() ??
+      }).toList() ??
       [];
 
   @action
   Future<void> loadTvShows() async {
     final future = _loadTvShows();
     tvShows = ObservableFuture(future);
-    return future;
+    await future;
   }
 
   @action
   void filter(String query) {
-    if (searchQuery?.trim() == query.trim()) {
+    if (searchQuery.trim() == query.trim()) {
       return;
     }
     searchQuery = query;
@@ -63,9 +63,9 @@ abstract class _ShowsStore with Store {
   Future<void> addShow(
     int indexerId, {
     bool isAnime = false,
-    TvShowEpisodeStatus status,
-    TvShowEpisodeStatus futureStatus,
-    TvShowEpisodeQuality quality,
+    TvShowEpisodeStatus? status,
+    TvShowEpisodeStatus? futureStatus,
+    TvShowEpisodeQuality? quality,
     bool scene = false,
     bool subtitles = true,
     bool folderSeasons = true,
