@@ -38,7 +38,12 @@ class SickChillScope extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<ShowsStore>(
       create: (_) {
-        return ShowsStore(SickChillApiProvider.setup(baseUrl: baseUrl, proxyUrl: proxyUrl, enableLogs: enableLogs, apiKey: apiKey));
+        return ShowsStore(SickChillApiProvider.setup(
+          baseUrl: baseUrl,
+          proxyUrl: proxyUrl,
+          enableLogs: enableLogs,
+          apiKey: apiKey,
+        ));
       },
       dispose: (_, store) => store.dispose(),
       child: child,
@@ -76,8 +81,8 @@ class SickChillScreen extends StatelessWidget {
                     icon: Icon(store.viewAsList ? Icons.view_module : Icons.view_list),
                   ),
                 ),
-        ],
-      ),
+              ],
+            ),
       body: TvShowList(
         headless: headless,
         splitAnimes: splitAnimes,
